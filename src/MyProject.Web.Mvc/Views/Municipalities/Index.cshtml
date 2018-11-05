@@ -1,0 +1,66 @@
+﻿@using MyProject.Web.Startup
+@{
+    ViewBag.CurrentPageName = PageNames.Municipalities; // The menu item will be active for this page.
+}
+@section scripts
+    {
+    <environment names="Development">
+        <script src="~/view-resources/Views/Municipalities/Index.js" asp-append-version="true"></script>
+    </environment>
+
+    <environment names="Staging,Production">
+        <script src="~/view-resources/Views/Municipalities/_EditMunicipalities.js" asp-append-version="true"></script>
+    </environment>
+}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                   Municipalities
+                </h2>
+                
+            </div>
+            <button type="button" data-toggle="modal" data-target="#MunicipalitiesEditModal" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" id="add-new-button">
+                <i class="material-icons">add</i>
+            </button>
+            <button type="button" data-toggle="collapse" data-target="#municipalitiesFilters" aria-expanded="false" aria-controls="municipalitiesFilters" class="btn btn-xs waves-circle btn-circle waves-float btn-warning pull-right mb0 ml10 t-left t-md t-alt" data-tooltip="Show / Hide Filters">
+                <i class="fa fa-filter"></i>
+            </button>
+            <div class="panel-information collapse" id="municipalitiesFilters">
+                <div class="pt10 pl15 pr15">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-3 col-sm-6">
+                            <label class="control-label">Status</label>
+                            <select id="activeFilter" class="form-control input-sm">
+                                <option value="">All</option>
+                                <option value="true" selected>Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="body table-responsive">
+                <table class="table" id="MunicipalitiesTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Point of Contact</th>
+                            <th>IsActive</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="MunicipalitiesEditModal" tabindex="-1" role="dialog" aria-labelledby="MunicipalitiesEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>

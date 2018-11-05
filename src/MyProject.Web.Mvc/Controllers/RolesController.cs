@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abp.Application.Services.Dto;
 using Abp.AspNetCore.Mvc.Authorization;
+using Abp.AutoMapper;
 using MyProject.Authorization;
 using MyProject.Controllers;
 using MyProject.Roles;
@@ -39,6 +40,15 @@ namespace MyProject.Web.Controllers
             var model = new EditRoleModalViewModel(output);
 
             return View("_EditRoleModal", model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveRole([FromBody] RoleDto role)
+        {
+            await _roleAppService.Create(role.MapTo(new CreateRoleDto()));
+
+            return Json(new { reload = true });
+
         }
     }
 }

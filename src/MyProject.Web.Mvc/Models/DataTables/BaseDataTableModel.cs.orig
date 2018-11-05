@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AllPoints.Web.Models.DataTables
+{
+    public class BaseDataTableModel
+    {
+        public DTParameters Param { get; set; }
+
+        public bool? ActiveFilter { get; set; }
+    }
+<<<<<<< HEAD
+
+    
+=======
+>>>>>>> develop
+}

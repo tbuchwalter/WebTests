@@ -21,27 +21,32 @@ namespace MyProject.Web.Tests
         {
             if (context.Request.Headers.Keys.Contains("my-name"))
             {
-                if (context.Request.Headers["my-name"].First().Equals("admin"))
+                await context.SignOutAsync();
+                if (context.Request.Headers.Keys.Contains("my-id"))
                 {
-                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, "admin"),
-                            new Claim(ClaimTypes.NameIdentifier, context.Request.Headers["my-id"].First()),
-                            new Claim(ClaimTypes.Role, "Admin"),
-                            new Claim("http://www.aspnetboilerplate.com/identity/claims/tenantId", "1", "int"),
-                            new Claim("AspNet.Identity.SecurityStamp", Guid.NewGuid().ToString())
+                    if (context.Request.Headers["my-name"].First().Equals("admin"))
+                    {
 
-                        }
-                       , "Identity.Application");
-                   ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
-                    context.User = principal;
-                    await context.SignInAsync("Identity.Application", principal);
+                        ClaimsIdentity claimsIdentity = new ClaimsIdentity(new List<Claim>
+                            {
+                                new Claim(ClaimTypes.Name, "admin"),
+                                new Claim(ClaimTypes.NameIdentifier, context.Request.Headers["my-id"].First()),
+                                new Claim(ClaimTypes.Role, "Admin"),
+                                new Claim("http://www.aspnetboilerplate.com/identity/claims/tenantId", "1", "int"),
+                                new Claim("AspNet.Identity.SecurityStamp", Guid.NewGuid().ToString())
 
+                            }
+                            , "Identity.Application");
+                        ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
+                        context.User = principal;
+                        //await context.SignInAsync("Identity.Application", principal);
+
+                    }
                 }
             }
 
             await _next(context);
         }
-       
+
     }
 }

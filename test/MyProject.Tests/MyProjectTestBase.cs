@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Abp;
 using Abp.Authorization.Users;
 using Abp.Events.Bus;
@@ -9,15 +8,17 @@ using Abp.Events.Bus.Entities;
 using Abp.MultiTenancy;
 using Abp.Runtime.Session;
 using Abp.TestBase;
+using Microsoft.EntityFrameworkCore;
 using MyProject.Authorization.Users;
 using MyProject.EntityFrameworkCore;
 using MyProject.EntityFrameworkCore.Seed.Host;
 using MyProject.EntityFrameworkCore.Seed.Tenants;
 using MyProject.MultiTenancy;
+using MyProject.Tests.TestDatas;
 
 namespace MyProject.Tests
 {
-    public abstract class MyProjectTestBase : AbpIntegratedTestBase<MyProjectTestModule>
+    public abstract class MyProjectTestBase : AbpIntegratedTestBase<AllPointsTestModule>
     {
         protected MyProjectTestBase()
         {
@@ -44,6 +45,8 @@ namespace MyProject.Tests
                 NormalizeDbContext(context);
                 new TenantRoleAndUserBuilder(context, 1).Create();
             });
+            UsingDbContext(context => { new TestDataBuilder(context).Build(); });
+            
 
             LoginAsDefaultTenantAdmin();
         }

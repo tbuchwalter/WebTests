@@ -38,6 +38,14 @@ namespace MyProject.Web.Startup
                     )
                 ).AddItem(
                     new MenuItemDefinition(
+                        PageNames.Municipalities,
+                        L("Municipalities"),
+                        url: "Municipalities",
+                        icon: "account_balance",
+                        requiredPermissionName: PermissionNames.Pages_Roles
+                    )
+                ).AddItem(
+                    new MenuItemDefinition(
                         PageNames.Roles,
                         L("Roles"),
                         url: "Roles",

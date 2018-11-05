@@ -18,6 +18,7 @@ using MyProject.EntityFrameworkCore;
 using MyProject.EntityFrameworkCore.Seed.Host;
 using MyProject.EntityFrameworkCore.Seed.Tenants;
 using MyProject.MultiTenancy;
+using MyProject.Tests.TestDatas;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Shouldly;
@@ -31,7 +32,7 @@ namespace MyProject.Web.Tests
         static MyProjectWebTestBase()
         {
             ContentRootFolder = new Lazy<string>(WebContentDirectoryFinder.CalculateContentRootFolder, true);
-            
+
         }
 
         protected MyProjectWebTestBase()
@@ -42,7 +43,7 @@ namespace MyProject.Web.Tests
                 context.EventBus = NullEventBus.Instance;
                 context.SuppressAutoSetTenantId = true;
             }
-         
+
 
             // Seed initial data for host
             AbpSession.TenantId = null;
@@ -60,10 +61,7 @@ namespace MyProject.Web.Tests
                 NormalizeDbContext(context);
                 new TenantRoleAndUserBuilder(context, 1).Create();
             });
-
-            
-            //LoginAsDefaultTenantAdmin();
-            
+            UsingDbContext(context => { new TestDataBuilder(context).Build(); });
         }
 
         protected override IWebHostBuilder CreateWebHostBuilder()
@@ -100,9 +98,6 @@ namespace MyProject.Web.Tests
             }
 
             AbpSession.UserId = user.Id;
-
-            //TestLoginHelper.
-
         }
 
         #endregion
@@ -129,8 +124,72 @@ namespace MyProject.Web.Tests
         protected async Task<HttpResponseMessage> GetResponseAsync(string url,
             HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {
-           
             var response = await Client.GetAsync(url);
+            response.StatusCode.ShouldBe(expectedStatusCode);
+            return response;
+        }
+        #endregion
+
+        #region Post response
+
+        protected async Task<T> PostResponseAsObjectAsync<T>(string url, StringContent content,
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            var strResponse = await PostResponseAsStringAsync(url, content, expectedStatusCode);
+            return JsonConvert.DeserializeObject<T>(strResponse, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+        }
+
+        protected async Task<string> PostResponseAsStringAsync(string url, StringContent content,
+           HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            var response = await PostResponseAsync(url, content, expectedStatusCode);
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        protected async Task<HttpResponseMessage> PostResponseAsync(string url, StringContent content,
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            //HttpResponseMessage response;
+            //if (isAjax)
+            //{
+            //    var request = new HttpRequestMessage(HttpMethod.Post,new Uri("http://localhost" + url));
+            //    response = await Client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+            //} else 
+            var response = await Client.PostAsync(url, content);
+
+            response.StatusCode.ShouldBe(expectedStatusCode);
+            return response;
+        }
+
+        #endregion
+
+        #region Send Response
+
+        protected async Task<T> SendResponseAsObjectAsync<T>(HttpRequestMessage message,
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            var strResponse = await SendResponseAsStringAsync(message, expectedStatusCode);
+            return JsonConvert.DeserializeObject<T>(strResponse, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+        }
+
+        protected async Task<string> SendResponseAsStringAsync(HttpRequestMessage message,
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            var response = await SendResponseAsync(message, expectedStatusCode);
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        protected async Task<HttpResponseMessage> SendResponseAsync(HttpRequestMessage message,
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            var response = await Client.SendAsync(message);
+
             response.StatusCode.ShouldBe(expectedStatusCode);
             return response;
         }

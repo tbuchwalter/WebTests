@@ -1,10 +1,13 @@
 ﻿using System;
 using Abp.AspNetCore;
+using Abp.AspNetCore.SignalR.Hubs;
 using Abp.AspNetCore.TestBase;
 using Abp.Dependency;
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,19 +21,21 @@ using MyProject.Web.Startup;
 
 namespace MyProject.Web.Tests
 {
-    public class Startup { 
-
-    private readonly IConfigurationRoot _appConfiguration;
-    public Startup(IHostingEnvironment env)
+    public class Startup
     {
-    _appConfiguration = env.GetAppConfiguration();
-    }
-    
+
+        private readonly IConfigurationRoot _appConfiguration;
+        public Startup(IHostingEnvironment env)
+        {
+            _appConfiguration = env.GetAppConfiguration();
+        }
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkInMemoryDatabase();
 
-            services.AddMvc();
+            services.AddMvc(
+                options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
             IdentityRegistrar.Register(services);
             AuthConfigurer.Configure(services, _appConfiguration);
 
@@ -38,7 +43,6 @@ namespace MyProject.Web.Tests
             services.AddScoped<IWebResourceManager, WebResourceManager>();
 
             services.AddSignalR();
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
 
             //Configure Abp and Dependency Injection
             return services.AddAbp<MyProjectWebTestModule>(options =>
@@ -49,20 +53,25 @@ namespace MyProject.Web.Tests
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            
+
             UseInMemoryDb(app.ApplicationServices);
 
             app.UseAbp(); //Initializes ABP framework.
 
             app.UseExceptionHandler("/Error");
 
+            app.UseStaticFiles();
+
             app.UseAuthentication();
 
             app.UseMiddleware<TestAuthenticationMiddleware>();
-            app.UseJwtTokenMiddleware();
+            //app.UseJwtTokenMiddleware();
 
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<AbpCommonHub>("/signalr");
+            });
 
-            app.UseStaticFiles();
 
             app.UseMvc(routes =>
             {
@@ -75,10 +84,10 @@ namespace MyProject.Web.Tests
 
         private void UseInMemoryDb(IServiceProvider serviceProvider)
         {
+            var connectinStringBuilder = new SqliteConnectionStringBuilder { DataSource = ":memory:" };
+            var connectionString = connectinStringBuilder.ToString();
             var builder = new DbContextOptionsBuilder<MyProjectDbContext>();
-            //var optiosn = SqliteInMemory.CreateOptions<AllPointsDbContext>();
-            //var connencionStringBuilder
-            builder.UseInMemoryDatabase(Guid.NewGuid().ToString()).UseInternalServiceProvider(serviceProvider);
+            builder.UseInMemoryDatabase(Guid.NewGuid().ToString()).UseSqlite(connectionString).UseInternalServiceProvider(serviceProvider);
             var options = builder.Options;
 
             var iocManager = serviceProvider.GetRequiredService<IIocManager>();

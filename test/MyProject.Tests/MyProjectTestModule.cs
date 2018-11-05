@@ -1,16 +1,16 @@
 using System;
-using Castle.MicroKernel.Registration;
-using NSubstitute;
 using Abp.AutoMapper;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Configuration.Startup;
 using Abp.Net.Mail;
 using Abp.TestBase;
 using Abp.Zero.Configuration;
 using Abp.Zero.EntityFrameworkCore;
+using Castle.MicroKernel.Registration;
 using MyProject.EntityFrameworkCore;
 using MyProject.Tests.DependencyInjection;
+using NSubstitute;
 
 namespace MyProject.Tests
 {
@@ -19,9 +19,9 @@ namespace MyProject.Tests
         typeof(MyProjectEntityFrameworkModule),
         typeof(AbpTestBaseModule)
         )]
-    public class MyProjectTestModule : AbpModule
+    public class AllPointsTestModule : AbpModule
     {
-        public MyProjectTestModule(MyProjectEntityFrameworkModule abpProjectNameEntityFrameworkModule)
+        public AllPointsTestModule(MyProjectEntityFrameworkModule abpProjectNameEntityFrameworkModule)
         {
             abpProjectNameEntityFrameworkModule.SkipDbContextRegistration = true;
             abpProjectNameEntityFrameworkModule.SkipDbSeed = true;

@@ -1,0 +1,224 @@
+﻿@using MyProject.Web.Models.Common.Modals
+@model MyProject.Web.Models.Municipalities.MunicipalitiesViewModel
+@{
+    Layout = null;
+}
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.Id == 0? "Add Municipality":"Edit Municipality"))
+
+<div class="modal-body">
+    <form name="MunicipalitiesEditForm" role="form" action="@Url.Action("SaveMunicipalities")" method="post" novalidate class="form-validation">
+        @*Municipalities section*@
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="CreationTime" type="hidden" />
+        <input asp-for="DeleterUserId" type="hidden" />
+        <input asp-for="DeletionTime" type="hidden" />
+        <input asp-for="LastModificationTime" type="hidden" />
+        <input asp-for="LastModifierUserId" type="hidden" />
+        <input asp-for="CreatorUserId" type="hidden" />
+        <input asp-for="AddressId" type="hidden"/>
+        @*Address section*@
+        <input asp-for="MunicipalAddress.Id" type="hidden" />
+        <input asp-for="MunicipalAddress.CreationTime" type="hidden" />
+        <input asp-for="MunicipalAddress.DeleterUserId" type="hidden" />
+        <input asp-for="MunicipalAddress.DeletionTime" type="hidden" />
+        <input asp-for="MunicipalAddress.LastModificationTime" type="hidden" />
+        <input asp-for="MunicipalAddress.LastModifierUserId" type="hidden" />
+        <input asp-for="MunicipalAddress.CreatorUserId" type="hidden" />
+
+
+        @Html.AntiForgeryToken()
+        <div class="tab-content">
+            <div class="row clearfix">
+                <div class="col-sm-12">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input asp-for="Name" type="text" required maxlength="32" minlength="2" class="validate form-control">
+                            <label for="Name" class="form-label">Name</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-sm-6">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input asp-for="PointOfContact" type="text" required maxlength="32" minlength="2" class="validate form-control">
+                            <label for="PointOfContact" class="form-label">"Point of Contact</label>
+                        </div>
+                    </div>
+                </div>
+            
+
+            
+                <div class="col-sm-6">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input asp-for="Email" type="email" required maxlength="32" minlength="2" class="validate form-control">
+                            <label for="Email" class="form-label">Email</label>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+
+
+            <div class="tab-content">
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input asp-for="MunicipalAddress.Address1" type="text" required maxlength="32" minlength="2" class="validate form-control">
+                                <label for="Address1" class="form-label">Address1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input asp-for="MunicipalAddress.Address2" type="text" maxlength="32" minlength="2" class="validate form-control">
+                                <label for="Address2" class="form-label">Address2</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input asp-for="MunicipalAddress.Address3" type="text" maxlength="32" minlength="2" class="validate form-control">
+                                <label for="Address3" class="form-label">Address3</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-sm-6">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input asp-for="MunicipalAddress.City" type="email" required maxlength="32" minlength="2" class="validate form-control">
+                                <label for="City" class="form-label">City</label>
+                            </div>
+                        </div>
+                    </div>
+                
+                
+                    <div class="col-sm-6">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <select asp-for="MunicipalAddress.State" required class="validate form-control">
+                                    <option value="1">Alabama</option>
+                                    <option value="2">Alaska</option>
+                                    <option value="3">Arizona</option>
+                                    <option value="4">Arkansas</option>
+                                    <option value="5">California</option>
+                                    <option value="6">Colorado</option>
+                                    <option value="7">Connecticut</option>
+                                    <option value="8">Delaware</option>
+                                    <option value="9">District Of Columbia</option>
+                                    <option value="10">Florida</option>
+                                    <option value="11">Georgia</option>
+                                    <option value="12">Hawaii</option>
+                                    <option value="13">Idaho</option>
+                                    <option value="14">Illinois</option>
+                                    <option value="15">Indiana</option>
+                                    <option value="16">Iowa</option>
+                                    <option value="17">Kansas</option>
+                                    <option value="18">Kentucky</option>
+                                    <option value="19">Louisiana</option>
+                                    <option value="20">Maine</option>
+                                    <option value="21">Maryland</option>
+                                    <option value="22">Massachusetts</option>
+                                    <option value="23">Michigan</option>
+                                    <option value="24">Minnesota</option>
+                                    <option value="25">Mississippi</option>
+                                    <option value="26">Missouri</option>
+                                    <option value="27">Montana</option>
+                                    <option value="28">Nebraska</option>
+                                    <option value="29">Nevada</option>
+                                    <option value="30">New Hampshire</option>
+                                    <option value="31">New Jersey</option>
+                                    <option value="32">New Mexico</option>
+                                    <option value="33">New York</option>
+                                    <option value="34">North Carolina</option>
+                                    <option value="35">North Dakota</option>
+                                    <option value="36">Ohio</option>
+                                    <option value="37">Oklahoma</option>
+                                    <option value="38">Oregon</option>
+                                    <option value="39">Pennsylvania</option>
+                                    <option value="40">Rhode Island</option>
+                                    <option value="41">South Carolina</option>
+                                    <option value="42">South Dakota</option>
+                                    <option value="43">Tennessee</option>
+                                    <option value="44">Texas</option>
+                                    <option value="45">Utah</option>
+                                    <option value="46">Vermont</option>
+                                    <option value="47">Virginia</option>
+                                    <option value="48">Washington</option>
+                                    <option value="49">West Virginia</option>
+                                    <option value="50">Wisconsin</option>
+                                    <option value="51">Wyoming</option>
+                                </select>
+
+                                <label for="State" class="form-label">State</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-sm-6">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input asp-for="MunicipalAddress.Zip" type="text" required maxlength="32" minlength="2" class="validate form-control">
+                                <label for="Zip" class="form-label">Zip Code</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-sm-6">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input asp-for="MunicipalAddress.Phone" type="text" required maxlength="11" minlength="10" class="validate form-control">
+                                <label for="Phone" class="form-label">Phone</label>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-sm-6">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input asp-for="MunicipalAddress.Fax" type="text" required maxlength="11" minlength="10" class="validate form-control">
+                                <label for="Fax" class="form-label">Fax</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="form-group form-float">
+                            <div class="checkbox">
+                                <input id="IsActive" type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "" ) class="form-control" />
+                                <label for="IsActive" class="form-label">IsActive</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+@Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+
+<script src="~/view-resources/Views/Municipalities/_EditMunicipalities.js" asp-append-version="true"></script>
